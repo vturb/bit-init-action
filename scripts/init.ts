@@ -23,8 +23,7 @@ const run = async (wsdir: string) => {
   // sets org and scope env for dependent tasks usage
   const workspaceJson = removeComments(removeSchemeUrl(workspace));
   const workspaceObject = JSON.parse(workspaceJson);
-  const defaultScope =
-    workspaceObject["teambit.workspace/workspace"].defaultScope;
+  const defaultScope = workspaceObject["teambit.workspace/workspace"].defaultScope;
   const [Org, Scope] = defaultScope.split(".");
   process.env.ORG = Org;
   process.env.SCOPE = Scope;
@@ -42,8 +41,11 @@ const run = async (wsdir: string) => {
   process.env.BIT_CONFIG_ANONYMOUS_REPORTING = "false";
   process.env.BIT_CONFIG_INTERACTIVE = "false";
 
+  // bit compile before install dependencies
+  await exec("bit compile", [], { cwd: wsdir }); //  fix error on bit install when there is use envs in the workspace.jsonc
+
   // bit install dependencies
-  await exec("bit install", [], { cwd: wsdir });
+  await exec("bit install --skip-compile", [], { cwd: wsdir });
 };
 
 export default run;
