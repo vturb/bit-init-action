@@ -4070,8 +4070,10 @@ const run = (wsdir) => __awaiter(void 0, void 0, void 0, function* () {
     process.env.BIT_CONFIG_ANALYTICS_REPORTING = "false";
     process.env.BIT_CONFIG_ANONYMOUS_REPORTING = "false";
     process.env.BIT_CONFIG_INTERACTIVE = "false";
+    // bit compile before install dependencies
+    yield (0, exec_1.exec)("bit compile", [], { cwd: wsdir }); //  fix error on bit install when there is use envs in the workspace.jsonc
     // bit install dependencies
-    yield (0, exec_1.exec)("bit install", [], { cwd: wsdir });
+    yield (0, exec_1.exec)("bit install --skip-compile", [], { cwd: wsdir });
 });
 exports["default"] = run;
 
